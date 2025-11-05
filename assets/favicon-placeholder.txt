@@ -1,0 +1,19 @@
+# Favicon
+
+To add a custom favicon to your website:
+
+1. Create a favicon.ico file (16x16 or 32x32 pixels)
+2. You can use online favicon generators like:
+   - https://favicon.io
+   - https://realfavicongenerator.net
+   - https://www.favicon-generator.org
+
+3. Replace this placeholder with your actual favicon.ico file
+
+## Quick Favicon Creation:
+- Start with a simple logo or your initials "AO"
+- Use your brand colors (the site uses a blue-purple gradient: #667eea to #764ba2)
+- Keep it simple - favicons are very small
+- Test it in different browsers
+
+The current HTML already references `./assets/favicon.ico`, so just replace this file with your actual favicon.
