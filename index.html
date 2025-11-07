@@ -9,15 +9,13 @@
 </head>
 <body>
     <header class="site-header">
-        <div class="brand">Ahmed Omar</div>
-        <nav class="tab-nav" aria-label="Main tabs">
-            <button class="tab-button active" data-tab="about" aria-controls="about" aria-selected="true">About</button>
-            <button class="tab-button" data-tab="blogs" aria-controls="blogs" aria-selected="false">Blogs</button>
-        </nav>
+        <div class="wrapper">
+            <a class="brand" href="/">Ahmed Omar</a>
+        </div>
     </header>
 
-    <main>
-        <section id="about" class="tab-content active" tabindex="0">
+    <main class="wrapper">
+        <section class="about">
             <h1>About</h1>
             <p>
                 I'm Ahmed Omar, a software developer who enjoys building reliable, human-friendly tools. I focus on
@@ -27,29 +25,16 @@
                 When I'm not coding, you'll find me exploring new frameworks, writing about lessons learned, or
                 mentoring other developers. This site keeps things simple so the content can take centre stage.
             </p>
-        </section>
-
-        <section id="blogs" class="tab-content" tabindex="0">
-            <div class="blogs-intro">
-                <h1>Blog</h1>
-                <p>
-                    Posts can be written in Markdown or plain HTML. Select a title to read the article directly on this
-                    page.
-                </p>
-            </div>
-            <div class="blogs-layout">
-                <aside class="blog-list" aria-label="Blog posts">
-                    <ul id="blog-list"></ul>
-                </aside>
-                <article id="blog-post" class="blog-post" aria-live="polite">
-                    <p>Select a post to start reading.</p>
-                </article>
-            </div>
+            <p class="cta">
+                <a class="button" href="blogs/">Read the blog</a>
+            </p>
         </section>
     </main>
 
     <footer class="site-footer">
-        <p>&copy; <span id="year"></span> Ahmed Omar. All rights reserved.</p>
+        <div class="wrapper">
+            <p>&copy; <span id="year"></span> Ahmed Omar. All rights reserved.</p>
+        </div>
     </footer>
 
     <script src="js/script.js"></script>

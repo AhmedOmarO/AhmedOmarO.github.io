@@ -1,22 +1,3 @@
-function switchTab(targetId) {
-    const tabs = document.querySelectorAll('.tab-content');
-    const buttons = document.querySelectorAll('.tab-button');
-
-    tabs.forEach((tab) => {
-        const isActive = tab.id === targetId;
-        tab.classList.toggle('active', isActive);
-        if (isActive) {
-            tab.focus();
-        }
-    });
-
-    buttons.forEach((button) => {
-        const isActive = button.dataset.tab === targetId;
-        button.classList.toggle('active', isActive);
-        button.setAttribute('aria-selected', String(isActive));
-    });
-}
-
 function escapeHtml(text) {
     return text
         .replace(/&/g, '&amp;')
@@ -85,78 +66,115 @@ function markdownToHtml(markdown) {
     return html;
 }
 
-async function renderPost(post, container, buttons) {
-    buttons.forEach((btn) => btn.classList.toggle('active', btn.dataset.file === post.file));
-    container.innerHTML = '<p>Loading…</p>';
-
-    try {
-        const response = await fetch(`blogs/${post.file}`);
-        if (!response.ok) {
-            throw new Error(`Unable to load ${post.file}`);
-        }
-        const text = await response.text();
-        const articleTitle = `<h2>${post.title}</h2>`;
-        const articleDate = post.date ? `<p class="blog-meta">${post.date}</p>` : '';
-
-        if (post.file.endsWith('.md')) {
-            container.innerHTML = `${articleTitle}${articleDate}${markdownToHtml(text)}`;
-        } else {
-            container.innerHTML = `${articleTitle}${articleDate}${text}`;
-        }
-    } catch (error) {
-        container.innerHTML = `<p>Sorry, we couldn't load that post.</p>`;
-        console.error(error);
+async function fetchPosts() {
+    const response = await fetch('posts.json');
+    if (!response.ok) {
+        throw new Error('Unable to fetch posts.');
     }
+    return response.json();
 }
 
-async function initialiseBlog() {
-    const listElement = document.getElementById('blog-list');
-    const articleElement = document.getElementById('blog-post');
+function normaliseFilePath(file) {
+    if (typeof file !== 'string') {
+        return '';
+    }
+    if (file.includes('..')) {
+        return '';
+    }
+    return file.trim();
+}
 
-    if (!listElement || !articleElement) {
+async function loadBlogIndex() {
+    const listElement = document.getElementById('post-list');
+    if (!listElement) {
         return;
     }
 
     try {
-        const response = await fetch('blogs/posts.json');
-        if (!response.ok) {
-            throw new Error('Unable to fetch posts.');
-        }
-        const posts = await response.json();
+        const posts = await fetchPosts();
         listElement.innerHTML = '';
 
         if (!Array.isArray(posts) || posts.length === 0) {
-            listElement.innerHTML = '<li>No posts yet. Create a Markdown (.md) or HTML (.html) file inside the blogs folder and list it in posts.json.</li>';
+            listElement.classList.add('empty');
+            listElement.innerHTML = '<li>No posts yet. Add an entry to <code>blogs/posts.json</code> to publish one.</li>';
             return;
         }
 
-        const buttons = [];
         posts.forEach((post) => {
-            const listItem = document.createElement('li');
-            const button = document.createElement('button');
-            button.type = 'button';
-            button.dataset.file = post.file;
-            button.textContent = post.title;
-            button.addEventListener('click', () => renderPost(post, articleElement, buttons));
-            listItem.appendChild(button);
-            listElement.appendChild(listItem);
-            buttons.push(button);
-        });
+            const safeFile = normaliseFilePath(post.file);
+            if (!safeFile) {
+                return;
+            }
 
-        renderPost(posts[0], articleElement, buttons);
+            const listItem = document.createElement('li');
+            const link = document.createElement('a');
+            link.href = `post.html?file=${encodeURIComponent(safeFile)}`;
+            link.textContent = post.title || safeFile;
+            listItem.appendChild(link);
+
+            if (post.date) {
+                const date = document.createElement('span');
+                date.className = 'post-date';
+                date.textContent = ` — ${post.date}`;
+                listItem.appendChild(date);
+            }
+
+            listElement.appendChild(listItem);
+        });
     } catch (error) {
-        listElement.innerHTML = '<li>Unable to load the post list right now.</li>';
+        listElement.classList.add('empty');
+        listElement.innerHTML = '<li>Unable to load posts right now.</li>';
         console.error(error);
     }
 }
 
-function initialiseTabs() {
-    const buttons = document.querySelectorAll('.tab-button');
-    buttons.forEach((button) => {
-        button.addEventListener('click', () => {
-            switchTab(button.dataset.tab);
-        });
-    });
+async function loadBlogPost() {
+    const articleElement = document.getElementById('post-content');
+    if (!articleElement) {
+        return;
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const fileParam = params.get('file');
+    const safeFile = normaliseFilePath(fileParam);
+
+    if (!safeFile) {
+        articleElement.innerHTML = '<p>Choose a story from the <a href="./">blog index</a>.</p>';
+        return;
+    }
+
+    try {
+        const [posts, fileResponse] = await Promise.all([
+            fetchPosts().catch(() => []),
+            fetch(safeFile)
+        ]);
+
+        if (!fileResponse.ok) {
+            throw new Error(`Unable to load ${safeFile}`);
+        }
+
+        const text = await fileResponse.text();
+        const metadata = Array.isArray(posts) ? posts.find((post) => normaliseFilePath(post.file) === safeFile) : null;
+
+        let articleHtml = '';
+        if (metadata) {
+            articleHtml += `<h1>${escapeHtml(metadata.title || safeFile)}</h1>`;
+            if (metadata.date) {
+                articleHtml += `<p class="blog-meta">${escapeHtml(metadata.date)}</p>`;
+            }
+        }
+
+        if (safeFile.endsWith('.md')) {
+            articleHtml += markdownToHtml(text);
+        } else {
+            articleHtml += text;
+        }
+
+        articleElement.innerHTML = articleHtml;
+    } catch (error) {
+        articleElement.innerHTML = '<p>Sorry, that post could not be loaded.</p>';
+        console.error(error);
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -164,6 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (yearElement) {
         yearElement.textContent = new Date().getFullYear();
     }
-    initialiseTabs();
-    initialiseBlog();
+
+    loadBlogIndex();
+    loadBlogPost();
 });
