@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why I Simplified My Website</title>
+    <meta name="description" content="Why I Simplified My Website">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/blog.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="wrapper">
+            <a class="brand" href="/">Ahmed Omar</a>
+            <nav class="site-nav" aria-label="Primary">
+                <a href="/#about">About</a>
+                <a href="/blogs/">Blogs</a>
+                <a href="/resume.pdf">Resume</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="wrapper blog-post-page">
+        <p><a href="./">&#8592; Back to all posts</a></p>
+        <article class="blog-post">
+            <h1>Why I Simplified My Website</h1>
+            <p class="blog-meta">2024-03-15</p>
+            <h1>Keeping Things Clear qadsadas</h1><p>My old portfolio was full of animations and overlapping sections. It looked impressive, but it distracted from what mattered most: the work itself.</p><p>Here is what I focused on while rebuilding the site:</p><ul><li>Keep navigation straightforward with only two destinations.</li><li>Choose typography and spacing that makes longer reads comfortable.</li><li>Ensure new posts can be published with a simple Markdown file.</li></ul><p>The result is a calmer, faster loading site where the content sets the tone.</p>
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="wrapper">
+            <div class="social-links" aria-label="Social links">
+                <a href="https://www.linkedin.com/in/ahmedomaro/" target="_blank" rel="noreferrer">LinkedIn</a>
+                <a href="mailto:ahmedomar92@yahoo.com">Email</a>
+            </div>
+
+            <p>&copy; <span id="year"></span> Ahmed Omar. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const yearElement = document.getElementById('year');
+        if (yearElement) {
+            yearElement.textContent = new Date().getFullYear();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+.blog-index {
+    padding-bottom: 3.5rem;
+}
+
+.blog-index h1 {
+    margin-bottom: 0.75rem;
+}
+
+.blog-index .intro {
+    color: var(--muted);
+    margin-bottom: 1.75rem;
+}
+
+.post-list {
+    list-style: disc;
+    margin: 0;
+    padding-left: 1.5rem;
+}
+
+.post-list li {
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+}
+
+.post-list a {
+    color: inherit;
+    text-decoration: underline;
+}
+
+.post-list a:hover,
+.post-list a:focus {
+    text-decoration: none;
+}
+
+.post-date {
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+.post-list.empty {
+    list-style: none;
+    padding-left: 0;
+    color: var(--muted);
+}
+
+.post-list.empty li {
+    margin: 0;
+}
+
+.blog-post-page {
+    padding-bottom: 3.5rem;
+}
+
+.blog-post {
+    line-height: 1.7;
+}
+
+.blog-post h1,
+.blog-post h2,
+.blog-post h3,
+.blog-post h4,
+.blog-post h5,
+.blog-post h6 {
+    color: var(--foreground);
+    margin-top: 2.25rem;
+}
+
+.blog-post h1:first-child,
+.blog-post h2:first-child {
+    margin-top: 0;
+}
+
+.blog-post p,
+.blog-post ul {
+    color: var(--muted);
+}
+
+.blog-post p {
+    margin-bottom: 1.4rem;
+}
+
+.blog-post ul {
+    margin: 1.4rem 0;
+    padding-left: 1.4rem;
+}
+
+.blog-post li + li {
+    margin-top: 0.6rem;
+}
+
+.blog-meta {
+    margin-top: 0.5rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.blog-post table {
+    width: 100%;
+    margin: 1.5rem 0;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.blog-post th,
+.blog-post td {
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+    color: var(--foreground, #1d1d1f);
+}
+
+.blog-post thead th {
+    background: rgba(0, 0, 0, 0.04);
+    font-weight: 600;
+}
+
+.blog-post tbody tr:nth-child(odd) {
+    background: rgba(0, 0, 0, 0.015);
+}

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building with Small, Focused Tools</title>
+    <meta name="description" content="Building with Small, Focused Tools">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/blog.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="wrapper">
+            <a class="brand" href="/">Ahmed Omar</a>
+            <nav class="site-nav" aria-label="Primary">
+                <a href="/#about">About</a>
+                <a href="/blogs/">Blogs</a>
+                <a href="/resume.pdf">Resume</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="wrapper blog-post-page">
+        <p><a href="./">&#8592; Back to all posts</a></p>
+        <article class="blog-post">
+            <h1>Building with Small, Focused Tools</h1>
+            <p class="blog-meta">2024-02-10</p>
+            <h1>Building with Small, Focused Tools</h1><p>I like tools that do one job well. It is why I tend to pair small command line scripts with deliberate design systems.</p><p>When every part of a stack has a clear purpose, it becomes easier to swap components, debug issues, or invite collaborators into the project.</p><p>If you are curious about my setup, feel free to <a href="mailto:ahmedomar92@yahoo.com" target="_blank" rel="noopener noreferrer">send me a note</a>.</p>
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="wrapper">
+            <div class="social-links" aria-label="Social links">
+                <a href="https://www.linkedin.com/in/ahmedomaro/" target="_blank" rel="noreferrer">LinkedIn</a>
+                <a href="mailto:ahmedomar92@yahoo.com">Email</a>
+            </div>
+
+            <p>&copy; <span id="year"></span> Ahmed Omar. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const yearElement = document.getElementById('year');
+        if (yearElement) {
+            yearElement.textContent = new Date().getFullYear();
+        }
+    </script>
+</body>
+</html>
