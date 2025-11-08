@@ -257,7 +257,7 @@ This project is open source and available under the [MIT License](https://openso
 
 ## 📞 Contact
 
-- **Email**: ahmed@example.com
+- **Email**: ahmedomar92@yahoo.com
 - **LinkedIn**: [linkedin.com/in/ahmed-omar](https://linkedin.com/in/ahmed-omar)
 - **GitHub**: [github.com/AhmedOmarO](https://github.com/AhmedOmarO)
 - **Website**: [AhmedOmarO.github.io](https://AhmedOmarO.github.io)

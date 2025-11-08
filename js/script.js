@@ -7,11 +7,31 @@ function escapeHtml(text) {
 
 function formatInline(text) {
     let result = escapeHtml(text);
+    result = result.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (_match, alt, src) => {
+        const safeAlt = alt.replace(/"/g, '&quot;');
+        const safeSrc = src.replace(/"/g, '&quot;');
+        return `<img src="${safeSrc}" alt="${safeAlt}" loading="lazy">`;
+    });
     result = result.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-    result = result.replace(/_(.+?)_/g, '<em>$1</em>');
+    result = result.replace(/(^|[\s.,;:!?()[\]{}'"-])_(.+?)_(?=$|[\s.,;:!?()[\]{}'"-])/g, (_match, lead, content) => {
+        return `${lead}<em>${content}</em>`;
+    });
     result = result.replace(/`([^`]+)`/g, '<code>$1</code>');
     result = result.replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
     return result;
+}
+
+function isTableDivider(line) {
+    return /^\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?$/.test(line);
+}
+
+function parseTableRow(line) {
+    const trimmed = line.trim().replace(/^\|/, '').replace(/\|$/, '');
+    return trimmed.split('|').map((cell) => formatInline(cell.trim()));
+}
+
+function isHtmlBlockStart(line) {
+    return /^<([a-zA-Z][\w-]*)(\s|>)/.test(line.trim());
 }
 
 function markdownToHtml(markdown) {
@@ -19,15 +39,15 @@ function markdownToHtml(markdown) {
     let html = '';
     let inList = false;
 
-    lines.forEach((line) => {
-        const trimmed = line.trim();
+    for (let i = 0; i < lines.length; i++) {
+        const trimmed = lines[i].trim();
 
         if (!trimmed) {
             if (inList) {
                 html += '</ul>';
                 inList = false;
             }
-            return;
+            continue;
         }
 
         const headingMatch = trimmed.match(/^(#{1,6})\s+(.+)$/);
@@ -38,7 +58,7 @@ function markdownToHtml(markdown) {
             }
             const level = Math.min(6, headingMatch[1].length);
             html += `<h${level}>${formatInline(headingMatch[2])}</h${level}>`;
-            return;
+            continue;
         }
 
         if (/^[-*+]\s+/.test(trimmed)) {
@@ -48,7 +68,95 @@ function markdownToHtml(markdown) {
             }
             const content = trimmed.replace(/^[-*+]\s+/, '');
             html += `<li>${formatInline(content)}</li>`;
-            return;
+            continue;
+        }
+
+        if (isHtmlBlockStart(trimmed)) {
+            if (inList) {
+                html += '</ul>';
+                inList = false;
+            }
+
+            const blockLines = [];
+            let j = i;
+            while (j < lines.length) {
+                const current = lines[j];
+                blockLines.push(current);
+                j++;
+                if (!current.trim()) {
+                    break;
+                }
+            }
+            i = j - 1;
+            html += blockLines.join('\n');
+            continue;
+        }
+
+        const looksLikeTable = trimmed.startsWith('|') && trimmed.includes('|');
+        if (looksLikeTable) {
+            if (inList) {
+                html += '</ul>';
+                inList = false;
+            }
+
+            const tableLines = [];
+            let j = i;
+            while (j < lines.length) {
+                const candidateRaw = lines[j];
+                const candidate = candidateRaw.trim();
+
+                if (!candidate) {
+                    j++;
+                    continue;
+                }
+
+                if (!candidate.startsWith('|') || !candidate.includes('|')) {
+                    break;
+                }
+
+                tableLines.push(candidate);
+                j++;
+            }
+
+            if (!tableLines.length) {
+                html += `<p>${formatInline(trimmed)}</p>`;
+                continue;
+            }
+
+            i = j - 1;
+
+            if (tableLines.length) {
+                let tableHtml = '<table>';
+                let bodyStartIndex = 0;
+                const hasHeader = tableLines.length > 1 && isTableDivider(tableLines[1]);
+
+                if (hasHeader) {
+                    const headerCells = parseTableRow(tableLines[0]);
+                    tableHtml += '<thead><tr>';
+                    headerCells.forEach((cell) => {
+                        tableHtml += `<th>${cell}</th>`;
+                    });
+                    tableHtml += '</tr></thead>';
+                    bodyStartIndex = 2;
+                }
+
+                tableHtml += '<tbody>';
+                for (let rowIndex = bodyStartIndex; rowIndex < tableLines.length; rowIndex++) {
+                    if (hasHeader && rowIndex === 1) {
+                        continue;
+                    }
+                    const cells = parseTableRow(tableLines[rowIndex]);
+                    tableHtml += '<tr>';
+                    cells.forEach((cell) => {
+                        tableHtml += `<td>${cell}</td>`;
+                    });
+                    tableHtml += '</tr>';
+                }
+                tableHtml += '</tbody></table>';
+                html += tableHtml;
+            }
+
+            continue;
         }
 
         if (inList) {
@@ -57,7 +165,7 @@ function markdownToHtml(markdown) {
         }
 
         html += `<p>${formatInline(trimmed)}</p>`;
-    });
+    }
 
     if (inList) {
         html += '</ul>';
@@ -177,6 +285,30 @@ async function loadBlogPost() {
     }
 }
 
+async function loadAboutSection() {
+    const aboutContainer = document.getElementById('about-body');
+    if (!aboutContainer) {
+        return;
+    }
+
+    const source = aboutContainer.dataset.source || 'content/about.md';
+    const resolvedUrl = source.startsWith('http')
+        ? source
+        : new URL(source, window.location.href).toString();
+
+    try {
+        const response = await fetch(resolvedUrl);
+        if (!response.ok) {
+            throw new Error('Unable to fetch about content.');
+        }
+        const markdown = await response.text();
+        aboutContainer.innerHTML = markdownToHtml(markdown);
+    } catch (error) {
+        aboutContainer.innerHTML = '<p>Unable to load the about section right now.</p>';
+        console.error(error);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const yearElement = document.getElementById('year');
     if (yearElement) {
@@ -185,4 +317,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
     loadBlogIndex();
     loadBlogPost();
+    loadAboutSection();
 });
