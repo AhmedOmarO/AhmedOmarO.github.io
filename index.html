@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ahmed Omar</title>
+    <title>Home</title>
     <meta name="description" content="Personal website for Ahmed Omar, featuring an about section and blog posts.">
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -22,43 +22,27 @@
     <main class="wrapper about-page">
         <section id="about" class="about">
             <div class="intro-links">
-                <p class="tagline">Software engineer & writer</p>
-                <div class="social-links" aria-label="Social links">
-                    <a href="https://twitter.com/AhmedOmarO" target="_blank" rel="noreferrer">Twitter</a>
-                    <a href="https://www.linkedin.com/in/ahmed-omar" target="_blank" rel="noreferrer">LinkedIn</a>
-                    <a href="mailto:ahmed@example.com">Email</a>
-                </div>
+                <!-- <p class="tagline">Software engineer & writer</p> -->
+                <!-- <div class="social-links" aria-label="Social links">
+                        <a href="https://www.linkedin.com/in/ahmedomaro/" target="_blank" rel="noreferrer">LinkedIn</a>
+                    <a href="mailto:ahmedomar92@yahoo.com">Email</a>
+                </div> -->
             </div>
 
-            <div class="about-heading">
-                <span class="rule" aria-hidden="true"></span>
-                <h1>Ahmed Omar</h1>
-            </div>
 
-            <p>
-                I am a software developer who enjoys building reliable, human-friendly tools. I focus on creating clear
-                user experiences and writing code that stays understandable long after it ships.
-            </p>
-            <p>
-                Recently, I have been working on pared-down interfaces that make learning resources easier to read. The
-                process has led me to share practical notes on my <a href="/blogs/">blog</a>, where I write about design
-                systems, teaching, and sustainable developer workflows.
-            </p>
-            <p>
-                Before that, I supported engineering teams as a mentor, helping them introduce lightweight processes,
-                modern tooling, and clear documentation. I also enjoy pairing on debugging sessions and giving talks
-                about approachable software design.
-            </p>
-            <p>
-                Outside of work, you will usually find me reading, sketching new layouts, or contributing to community
-                workshops. If you would like to collaborate or say hello, feel free to <a href="mailto:ahmed@example.com">send
-                a note</a>.
-            </p>
+            <div id="about-body" class="about-body" data-source="/content/about.md">
+                <p>Loading about section…</p>
+            </div>
         </section>
     </main>
 
     <footer class="site-footer">
         <div class="wrapper">
+            <div class="social-links" aria-label="Social links">
+                <a href="https://www.linkedin.com/in/ahmedomaro/" target="_blank" rel="noreferrer">LinkedIn</a>
+                <a href="mailto:ahmedomar92@yahoo.com">Email</a>
+            </div>
+
             <p>&copy; <span id="year"></span> Ahmed Omar. All rights reserved.</p>
         </div>
     </footer>

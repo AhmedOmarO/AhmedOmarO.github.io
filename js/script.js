@@ -38,6 +38,7 @@ function markdownToHtml(markdown) {
     const lines = markdown.split(/\r?\n/);
     let html = '';
     let inList = false;
+    let inTable = false;
 
     for (let i = 0; i < lines.length; i++) {
         const trimmed = lines[i].trim();
@@ -47,6 +48,10 @@ function markdownToHtml(markdown) {
                 html += '</ul>';
                 inList = false;
             }
+            if (inTable) {
+                html += '</tbody></table>';
+                inTable = false;
+            }
             continue;
         }
 
@@ -55,6 +60,10 @@ function markdownToHtml(markdown) {
             if (inList) {
                 html += '</ul>';
                 inList = false;
+            }
+            if (inTable) {
+                html += '</tbody></table>';
+                inTable = false;
             }
             const level = Math.min(6, headingMatch[1].length);
             html += `<h${level}>${formatInline(headingMatch[2])}</h${level}>`;
@@ -71,91 +80,21 @@ function markdownToHtml(markdown) {
             continue;
         }
 
-        if (isHtmlBlockStart(trimmed)) {
-            if (inList) {
-                html += '</ul>';
-                inList = false;
+        if (isTableDivider(trimmed)) {
+            if (!inTable) {
+                html += '<table><tbody>';
+                inTable = true;
             }
-
-            const blockLines = [];
-            let j = i;
-            while (j < lines.length) {
-                const current = lines[j];
-                blockLines.push(current);
-                j++;
-                if (!current.trim()) {
-                    break;
-                }
-            }
-            i = j - 1;
-            html += blockLines.join('\n');
             continue;
         }
 
-        const looksLikeTable = trimmed.startsWith('|') && trimmed.includes('|');
-        if (looksLikeTable) {
-            if (inList) {
-                html += '</ul>';
-                inList = false;
-            }
-
-            const tableLines = [];
-            let j = i;
-            while (j < lines.length) {
-                const candidateRaw = lines[j];
-                const candidate = candidateRaw.trim();
-
-                if (!candidate) {
-                    j++;
-                    continue;
-                }
-
-                if (!candidate.startsWith('|') || !candidate.includes('|')) {
-                    break;
-                }
-
-                tableLines.push(candidate);
-                j++;
-            }
-
-            if (!tableLines.length) {
-                html += `<p>${formatInline(trimmed)}</p>`;
-                continue;
-            }
-
-            i = j - 1;
-
-            if (tableLines.length) {
-                let tableHtml = '<table>';
-                let bodyStartIndex = 0;
-                const hasHeader = tableLines.length > 1 && isTableDivider(tableLines[1]);
-
-                if (hasHeader) {
-                    const headerCells = parseTableRow(tableLines[0]);
-                    tableHtml += '<thead><tr>';
-                    headerCells.forEach((cell) => {
-                        tableHtml += `<th>${cell}</th>`;
-                    });
-                    tableHtml += '</tr></thead>';
-                    bodyStartIndex = 2;
-                }
-
-                tableHtml += '<tbody>';
-                for (let rowIndex = bodyStartIndex; rowIndex < tableLines.length; rowIndex++) {
-                    if (hasHeader && rowIndex === 1) {
-                        continue;
-                    }
-                    const cells = parseTableRow(tableLines[rowIndex]);
-                    tableHtml += '<tr>';
-                    cells.forEach((cell) => {
-                        tableHtml += `<td>${cell}</td>`;
-                    });
-                    tableHtml += '</tr>';
-                }
-                tableHtml += '</tbody></table>';
-                html += tableHtml;
-            }
-
+        if (inTable && trimmed.startsWith('|')) {
+            const cells = parseTableRow(trimmed);
+            html += '<tr>';
+            cells.forEach((cell) => {
+                html += `<td>${cell}</td>`;
+            });
+            html += '</tr>';
             continue;
         }
 
@@ -164,11 +103,20 @@ function markdownToHtml(markdown) {
             inList = false;
         }
 
+        if (inTable) {
+            html += '</tbody></table>';
+            inTable = false;
+        }
+
         html += `<p>${formatInline(trimmed)}</p>`;
     }
 
     if (inList) {
         html += '</ul>';
+    }
+
+    if (inTable) {
+        html += '</tbody></table>';
     }
 
     return html;

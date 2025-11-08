@@ -1,17 +1,26 @@
 :root {
-    color-scheme: light dark;
+    /* color-scheme: light dark;
     --background: #f7f7f7;
     --foreground: #1d1d1f;
-    --muted: #555;
+    --muted: #555; */
     --accent: #005fcc;
-    --surface: #ffffff;
-    --border: rgba(0, 0, 0, 0.08);
-    font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+    /* --surface: #ffffff;
+    --border: rgba(0, 0, 0, 0.08); */
+    /* font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif; */
 }
 
 * {
     box-sizing: border-box;
 }
+img {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    margin: 1.5rem 0;
+    border-radius: 8px;
+}
+
 
 body {
     margin: 0;
@@ -40,20 +49,25 @@ a:focus {
 }
 
 .site-header {
-    padding: 2.5rem 0 1.5rem;
+    padding: .5rem 0 .5rem;
+    background-color: black;
+    color: white !important;
+
+  
 }
 
 .site-header .wrapper {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1.5rem;
+    gap: .5rem;
+    color: #0f172a;
 }
 
 .brand {
     font-size: 1.5rem;
     font-weight: 600;
-    color: inherit;
+    color: rgb(255, 255, 255);
 }
 
 .site-nav {
@@ -66,7 +80,7 @@ a:focus {
 .site-nav a {
     padding: 0.4rem 0.9rem;
     border-radius: 999px;
-    color: inherit;
+    color: #ffffff;
     transition: background 0.2s ease, color 0.2s ease;
 }
 
@@ -79,12 +93,12 @@ a:focus {
 
 main {
     flex: 1;
-    padding-bottom: 3rem;
+    padding-bottom: 1rem;
 }
 
 .about-page {
-    padding-top: 1rem;
-    padding-bottom: 4rem;
+    padding-top: 0rem;
+    padding-bottom: .2rem;
 }
 
 .about {
@@ -92,16 +106,21 @@ main {
     margin: 0 auto;
 }
 
-.about h1 {
-    margin: 0;
-    font-size: clamp(2.5rem, 3vw + 1.5rem, 3.5rem);
-    color: var(--foreground);
-}
-
-.about p {
-    margin: 0 0 1.5rem;
+.about p,
+.about-body p {
+    margin: 0 0 1rem;
     color: var(--muted);
     font-size: 1.05rem;
+    text-align: justify;
+}
+
+.about-body img {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    margin: 1.5rem 0;
+    border-radius: 8px;
 }
 
 .intro-links {
@@ -132,8 +151,13 @@ main {
     font-weight: 500;
 }
 
+
 .about-heading {
-    margin-bottom: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.about-heading h1 {
+    margin: 0;
 }
 
 .about-heading .rule {
@@ -141,7 +165,14 @@ main {
     width: 48px;
     height: 2px;
     background: var(--foreground);
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.about-body h1,
+.about-body h2,
+.about-body h3 {
+    margin: 0 0 0;
+    line-height: 1.2;
 }
 
 .site-footer {

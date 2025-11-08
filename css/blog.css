@@ -93,3 +93,27 @@
     color: var(--muted);
     font-size: 0.9rem;
 }
+
+.blog-post table {
+    width: 100%;
+    margin: 1.5rem 0;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.blog-post th,
+.blog-post td {
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+    color: var(--foreground, #1d1d1f);
+}
+
+.blog-post thead th {
+    background: rgba(0, 0, 0, 0.04);
+    font-weight: 600;
+}
+
+.blog-post tbody tr:nth-child(odd) {
+    background: rgba(0, 0, 0, 0.015);
+}

@@ -1,15 +1,5 @@
 [
     {
-        "title": "Why I Simplified My Website",
-        "date": "2024-03-15",
-        "file": "why-i-simplified.md"
-    },
-    {
-        "title": "Building with Small, Focused Tools",
-        "date": "2024-02-10",
-        "file": "focused-tools.html"
-    },
-    {
         "title": "Python Packages installations",
         "date": "2024-05-27",
         "file": "2024-05-27-pypi-eda.md"

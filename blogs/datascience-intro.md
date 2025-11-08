@@ -1,4 +1,4 @@
-# Keeping Things Clear qadsadas
+# How would i learn 
 
 My old portfolio was full of animations and overlapping sections. It looked impressive, but it distracted from what mattered most: the work itself.
 
