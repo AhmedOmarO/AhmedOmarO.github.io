@@ -117,3 +117,50 @@
 .blog-post tbody tr:nth-child(odd) {
     background: rgba(0, 0, 0, 0.015);
 }
+
+/* RTL Support for Blog Posts */
+.blog-post[lang="ar"],
+.blog-post.rtl,
+.blog-post.arabic {
+    direction: rtl !important;
+    text-align: justify !important;
+}
+
+.blog-post[lang="ar"] p,
+.blog-post.rtl p,
+.blog-post.arabic p,
+.blog-post[lang="ar"] h1,
+.blog-post[lang="ar"] h2,
+.blog-post[lang="ar"] h3,
+.blog-post.rtl h1,
+.blog-post.rtl h2,
+.blog-post.rtl h3,
+.blog-post.arabic h1,
+.blog-post.arabic h2,
+.blog-post.arabic h3 {
+    text-align: justify !important;
+    direction: rtl !important;
+}
+
+.blog-post[lang="ar"] ul,
+.blog-post.rtl ul,
+.blog-post.arabic ul {
+    padding-right: 1.4rem;
+    padding-left: 0;
+    direction: rtl !important;
+}
+
+.blog-post[lang="ar"] table,
+.blog-post.rtl table,
+.blog-post.arabic table {
+    direction: rtl !important;
+}
+
+.blog-post[lang="ar"] th,
+.blog-post[lang="ar"] td,
+.blog-post.rtl th,
+.blog-post.rtl td,
+.blog-post.arabic th,
+.blog-post.arabic td {
+    text-align: right !important;
+}

@@ -112,6 +112,7 @@ main {
     color: var(--muted);
     font-size: 1.05rem;
     text-align: justify;
+
 }
 
 .about-body img {
@@ -200,4 +201,62 @@ body.dark {
     --accent: #60a5fa;
     --surface: #13203d;
     --border: rgba(99, 102, 241, 0.25);
+}
+
+/* RTL Support for Arabic Content */
+[lang="ar"], .rtl, .arabic {
+    direction: rtl !important;
+    text-align: justify !important;
+}
+
+[lang="ar"] p, .rtl p, .arabic p,
+[lang="ar"] .about-body p, .rtl .about-body p, .arabic .about-body p {
+    text-align: justify !important;
+    direction: rtl !important;
+}
+
+[lang="ar"] ul, .rtl ul, .arabic ul {
+    padding-right: 1.4rem;
+    padding-left: 0;
+    direction: rtl !important;
+}
+
+[lang="ar"] .post-list, .rtl .post-list, .arabic .post-list {
+    padding-right: 1.5rem;
+    padding-left: 0;
+    list-style-position: inside;
+    direction: rtl !important;
+}
+
+/* Auto-detect Arabic content - stronger selectors */
+body .blog-post[lang="ar"],
+body .blog-post.arabic,
+body .blog-post.rtl,
+body .about-body[lang="ar"],
+body .about-body.arabic,
+body .about-body.rtl {
+    direction: rtl !important;
+    text-align: justify !important;
+}
+
+body .blog-post[lang="ar"] *,
+body .blog-post.arabic *,
+body .blog-post.rtl *,
+body .about-body[lang="ar"] *,
+body .about-body.arabic *,
+body .about-body.rtl * {
+    direction: rtl !important;
+    text-align: justify !important;
+}
+
+/* Immediate RTL for any text containing Arabic characters */
+p:lang(ar), h1:lang(ar), h2:lang(ar), h3:lang(ar) {
+    direction: rtl !important;
+    text-align: justify !important;
+}
+
+/* Force RTL for elements with Arabic script */
+*[dir="rtl"] {
+    direction: rtl !important;
+    text-align: justify !important;
 }

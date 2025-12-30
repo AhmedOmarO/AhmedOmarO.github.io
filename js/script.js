@@ -122,6 +122,55 @@ function markdownToHtml(markdown) {
     return html;
 }
 
+// Function to detect Arabic content and apply RTL styling
+function detectAndApplyRTL(element) {
+    if (!element) return;
+    
+    // Arabic Unicode range: \u0600-\u06FF (Arabic), \u0750-\u077F (Arabic Supplement)
+    const arabicRegex = /[\u0600-\u06FF\u0750-\u077F]/;
+    const textContent = element.textContent || element.innerText || '';
+    
+    console.log('Checking element for Arabic content:', element.className);
+    console.log('Text sample:', textContent.substring(0, 100));
+    
+    // Count Arabic characters vs total characters
+    const arabicMatches = textContent.match(/[\u0600-\u06FF\u0750-\u077F]/g);
+    const arabicCharCount = arabicMatches ? arabicMatches.length : 0;
+    const totalCharCount = textContent.replace(/\s/g, '').length;
+    
+    console.log('Arabic chars:', arabicCharCount, 'Total chars:', totalCharCount);
+    
+    // If more than 10% of characters are Arabic, apply RTL styling
+    if (totalCharCount > 0 && (arabicCharCount / totalCharCount) > 0.1) {
+        console.log('Applying RTL styling...');
+        element.classList.add('arabic');
+        element.setAttribute('lang', 'ar');
+        element.setAttribute('dir', 'rtl');
+        
+        // Apply to all child elements as well
+        const allChildren = element.querySelectorAll('*');
+        allChildren.forEach(child => {
+            if (child.textContent && /[\u0600-\u06FF\u0750-\u077F]/.test(child.textContent)) {
+                child.classList.add('arabic');
+                child.setAttribute('dir', 'rtl');
+            }
+        });
+        
+        // Also set direction on the parent blog post if this is within one
+        const blogPost = element.closest('.blog-post');
+        if (blogPost) {
+            console.log('Setting RTL on blog post element');
+            blogPost.classList.add('arabic');
+            blogPost.setAttribute('lang', 'ar');
+            blogPost.setAttribute('dir', 'rtl');
+        }
+        
+        // Force immediate style recalculation
+        element.style.direction = 'rtl';
+        element.style.textAlign = 'justify';
+    }
+}
+
 async function fetchPosts() {
     const response = await fetch('posts.json');
     if (!response.ok) {
@@ -227,6 +276,20 @@ async function loadBlogPost() {
         }
 
         articleElement.innerHTML = articleHtml;
+        
+        // Check if metadata specifies language as Arabic
+        if (metadata && metadata.lang === 'ar') {
+            console.log('Metadata indicates Arabic content');
+            articleElement.classList.add('arabic');
+            articleElement.setAttribute('lang', 'ar');
+            articleElement.setAttribute('dir', 'rtl');
+            articleElement.style.direction = 'rtl';
+            articleElement.style.textAlign = 'justify';
+        }
+        
+        // Auto-detect Arabic content and apply RTL styling
+        detectAndApplyRTL(articleElement);
+        
     } catch (error) {
         articleElement.innerHTML = '<p>Sorry, that post could not be loaded.</p>';
         console.error(error);
@@ -251,6 +314,10 @@ async function loadAboutSection() {
         }
         const markdown = await response.text();
         aboutContainer.innerHTML = markdownToHtml(markdown);
+        
+        // Auto-detect Arabic content and apply RTL styling
+        detectAndApplyRTL(aboutContainer);
+        
     } catch (error) {
         aboutContainer.innerHTML = '<p>Unable to load the about section right now.</p>';
         console.error(error);
