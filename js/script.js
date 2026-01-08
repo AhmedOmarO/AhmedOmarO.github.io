@@ -5,19 +5,24 @@ function escapeHtml(text) {
         .replace(/>/g, '&gt;');
 }
 
-function formatInline(text) {
-    let result = escapeHtml(text);
-    result = result.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (_match, alt, src) => {
-        const safeAlt = alt.replace(/"/g, '&quot;');
-        const safeSrc = src.replace(/"/g, '&quot;');
-        return `<img src="${safeSrc}" alt="${safeAlt}" loading="lazy">`;
-    });
-    result = result.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-    result = result.replace(/(^|[\s.,;:!?()[\]{}'"-])_(.+?)_(?=$|[\s.,;:!?()[\]{}'"-])/g, (_match, lead, content) => {
-        return `${lead}<em>${content}</em>`;
-    });
-    result = result.replace(/`([^`]+)`/g, '<code>$1</code>');
-    result = result.replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+function formatInline(text, preserveHtml = false) {
+    let result = preserveHtml ? text : escapeHtml(text);
+    
+    // Only process markdown if we're not preserving HTML
+    if (!preserveHtml) {
+        result = result.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (_match, alt, src) => {
+            const safeAlt = alt.replace(/"/g, '&quot;');
+            const safeSrc = src.replace(/"/g, '&quot;');
+            return `<img src="${safeSrc}" alt="${safeAlt}" loading="lazy">`;
+        });
+        result = result.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        result = result.replace(/(^|[\s.,;:!?()[\]{}'"-])_(.+?)_(?=$|[\s.,;:!?()[\]{}'"-])/g, (_match, lead, content) => {
+            return `${lead}<em>${content}</em>`;
+        });
+        result = result.replace(/`([^`]+)`/g, '<code>$1</code>');
+        result = result.replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+    }
+    
     return result;
 }
 
@@ -39,6 +44,7 @@ function markdownToHtml(markdown) {
     let html = '';
     let inList = false;
     let inTable = false;
+    let inHtmlBlock = false;
 
     for (let i = 0; i < lines.length; i++) {
         const trimmed = lines[i].trim();
@@ -52,6 +58,36 @@ function markdownToHtml(markdown) {
                 html += '</tbody></table>';
                 inTable = false;
             }
+            if (!inHtmlBlock) {
+                continue;
+            }
+        }
+
+        // Check for HTML block start/end
+        if (isHtmlBlockStart(trimmed)) {
+            if (inList) {
+                html += '</ul>';
+                inList = false;
+            }
+            if (inTable) {
+                html += '</tbody></table>';
+                inTable = false;
+            }
+            inHtmlBlock = true;
+            html += lines[i]; // Preserve original line formatting
+            continue;
+        }
+
+        // Check for HTML block end
+        if (inHtmlBlock && /<\/[a-zA-Z][\w-]*>/.test(trimmed)) {
+            html += lines[i]; // Preserve original line formatting
+            inHtmlBlock = false;
+            continue;
+        }
+
+        // If we're in an HTML block, just pass through the content
+        if (inHtmlBlock) {
+            html += lines[i]; // Preserve original line formatting
             continue;
         }
 
