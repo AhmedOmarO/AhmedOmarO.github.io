@@ -231,15 +231,23 @@ async function loadBlogIndex() {
         return;
     }
 
+    const fallbackHtml = listElement.innerHTML;
+    const parentElement = listElement.parentElement;
+
     try {
         const posts = await fetchPosts();
-        listElement.innerHTML = '';
-
         if (!Array.isArray(posts) || posts.length === 0) {
             listElement.classList.add('empty');
             listElement.innerHTML = '<li>No posts yet. Add an entry to <code>blogs/posts.json</code> to publish one.</li>';
+            const existingError = parentElement?.querySelector('[data-post-error]');
+            if (existingError) {
+                existingError.remove();
+            }
             return;
         }
+
+        const listItems = document.createDocumentFragment();
+        let validPosts = 0;
 
         posts.forEach((post) => {
             const safeFile = normaliseFilePath(post.file);
@@ -260,12 +268,39 @@ async function loadBlogIndex() {
                 listItem.appendChild(date);
             }
 
-            listElement.appendChild(listItem);
+            listItems.appendChild(listItem);
+            validPosts += 1;
         });
+
+        if (validPosts === 0) {
+            listElement.classList.add('empty');
+            listElement.innerHTML = '<li>No posts yet. Add an entry to <code>blogs/posts.json</code> to publish one.</li>';
+            const existingError = parentElement?.querySelector('[data-post-error]');
+            if (existingError) {
+                existingError.remove();
+            }
+            return;
+        }
+
+        listElement.classList.remove('empty');
+        listElement.innerHTML = '';
+        listElement.appendChild(listItems);
+        const existingError = parentElement?.querySelector('[data-post-error]');
+        if (existingError) {
+            existingError.remove();
+        }
     } catch (error) {
-        listElement.classList.add('empty');
-        listElement.innerHTML = '<li>Unable to load posts right now.</li>';
-        console.error(error);
+        listElement.innerHTML = fallbackHtml;
+        listElement.classList.remove('empty');
+        console.error('Unable to refresh posts:', error);
+
+        if (parentElement && !parentElement.querySelector('[data-post-error]')) {
+            const message = document.createElement('p');
+            message.className = 'post-error';
+            message.dataset.postError = 'true';
+            message.textContent = 'Latest posts could not be loaded right now.';
+            listElement.insertAdjacentElement('afterend', message);
+        }
     }
 }
 
@@ -338,6 +373,7 @@ async function loadAboutSection() {
         return;
     }
 
+    const fallbackHtml = aboutContainer.innerHTML;
     const source = aboutContainer.dataset.source || 'content/about.md';
     const resolvedUrl = source.startsWith('http')
         ? source
@@ -349,14 +385,25 @@ async function loadAboutSection() {
             throw new Error('Unable to fetch about content.');
         }
         const markdown = await response.text();
-        aboutContainer.innerHTML = markdownToHtml(markdown);
+        const renderedHtml = markdownToHtml(markdown)
+            .replace(/<h1>/g, '<h2>')
+            .replace(/<\/h1>/g, '</h2>');
+        aboutContainer.innerHTML = renderedHtml;
         
         // Auto-detect Arabic content and apply RTL styling
         detectAndApplyRTL(aboutContainer);
         
     } catch (error) {
-        aboutContainer.innerHTML = '<p>Unable to load the about section right now.</p>';
-        console.error(error);
+        aboutContainer.innerHTML = fallbackHtml;
+        console.error('Unable to refresh about section:', error);
+
+        if (!aboutContainer.querySelector('[data-about-error]')) {
+            const message = document.createElement('p');
+            message.className = 'about-error';
+            message.dataset.aboutError = 'true';
+            message.textContent = 'Latest about details could not be loaded right now.';
+            aboutContainer.appendChild(message);
+        }
     }
 }
 
