@@ -361,6 +361,9 @@ async function loadBlogPost() {
         // Auto-detect Arabic content and apply RTL styling
         detectAndApplyRTL(articleElement);
         
+        // Setup GIF hover effect for dynamically loaded images
+        setupGifHover(articleElement);
+        
     } catch (error) {
         articleElement.innerHTML = '<p>Sorry, that post could not be loaded.</p>';
         console.error(error);
@@ -405,6 +408,203 @@ async function loadAboutSection() {
             aboutContainer.appendChild(message);
         }
     }
+}
+
+function setupGifHover(container) {
+    const root = container || document;
+    let images = root.querySelectorAll("img");
+    
+    images.forEach((img) => {
+        if (img.src.endsWith(".gif")) {
+            const gifSrc = img.src;
+            
+            const applyGifPlayer = () => {
+                // Capture first frame to canvas
+                const canvas = document.createElement('canvas');
+                canvas.width = img.naturalWidth;
+                canvas.height = img.naturalHeight;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                const firstFrameSrc = canvas.toDataURL('image/png');
+                
+                // Create wrapper container
+                const wrapper = document.createElement('div');
+                wrapper.className = 'gif-player';
+                wrapper.style.display = 'inline-block';
+                wrapper.style.maxWidth = '100%';
+                wrapper.style.textAlign = 'center';
+                
+                // Lock image dimensions
+                const originalWidth = img.width;
+                img.style.width = originalWidth + 'px';
+                img.style.maxWidth = '100%';
+                img.style.height = 'auto';
+                img.style.display = 'block';
+                img.style.cursor = 'zoom-in';
+                img.style.transition = 'transform 0.3s ease';
+                
+                // Create button container
+                const btnContainer = document.createElement('div');
+                btnContainer.style.cssText = `
+                    display: flex;
+                    justify-content: center;
+                    gap: 10px;
+                    margin-top: 10px;
+                `;
+                
+                // Create play button
+                const playBtn = document.createElement('button');
+                playBtn.className = 'gif-play-btn';
+                playBtn.innerHTML = '▶ Play';
+                playBtn.setAttribute('aria-label', 'Play GIF');
+                playBtn.style.cssText = `
+                    padding: 8px 20px;
+                    border-radius: 20px;
+                    border: none;
+                    background: rgba(0, 0, 0, 0.7);
+                    color: white;
+                    font-size: 14px;
+                    cursor: pointer;
+                    transition: background 0.2s, transform 0.2s;
+                `;
+                
+                // Create zoom button
+                const zoomBtn = document.createElement('button');
+                zoomBtn.className = 'gif-zoom-btn';
+                zoomBtn.innerHTML = '🔍 Zoom';
+                zoomBtn.setAttribute('aria-label', 'Zoom GIF');
+                zoomBtn.style.cssText = `
+                    padding: 8px 20px;
+                    border-radius: 20px;
+                    border: none;
+                    background: rgba(0, 0, 0, 0.7);
+                    color: white;
+                    font-size: 14px;
+                    cursor: pointer;
+                    transition: background 0.2s, transform 0.2s;
+                `;
+                
+                // Button hover effects
+                [playBtn, zoomBtn].forEach(btn => {
+                    btn.addEventListener('mouseenter', () => {
+                        btn.style.background = 'rgba(0, 0, 0, 0.9)';
+                        btn.style.transform = 'scale(1.05)';
+                    });
+                    btn.addEventListener('mouseleave', () => {
+                        btn.style.background = 'rgba(0, 0, 0, 0.7)';
+                        btn.style.transform = 'scale(1)';
+                    });
+                });
+                
+                let isPlaying = false;
+                let isZoomed = false;
+                
+                playBtn.addEventListener('click', () => {
+                    isPlaying = !isPlaying;
+                    if (isPlaying) {
+                        // Force reload GIF to restart animation
+                        img.src = gifSrc + '?t=' + Date.now();
+                        playBtn.innerHTML = '⏹ Stop';
+                        playBtn.setAttribute('aria-label', 'Stop GIF');
+                    } else {
+                        img.src = firstFrameSrc;
+                        playBtn.innerHTML = '▶ Play';
+                        playBtn.setAttribute('aria-label', 'Play GIF');
+                    }
+                });
+                
+                // Zoom functionality
+                const openZoomModal = () => {
+                    const overlay = document.createElement('div');
+                    overlay.className = 'gif-zoom-overlay';
+                    overlay.style.cssText = `
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background: rgba(0, 0, 0, 0.9);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        z-index: 9999;
+                        cursor: zoom-out;
+                    `;
+                    
+                    const zoomedImg = document.createElement('img');
+                    zoomedImg.src = img.src;
+                    zoomedImg.style.cssText = `
+                        max-width: 95%;
+                        max-height: 95%;
+                        object-fit: contain;
+                    `;
+                    
+                    const closeBtn = document.createElement('button');
+                    closeBtn.innerHTML = '✕';
+                    closeBtn.style.cssText = `
+                        position: absolute;
+                        top: 20px;
+                        right: 20px;
+                        width: 40px;
+                        height: 40px;
+                        border-radius: 50%;
+                        border: none;
+                        background: rgba(255, 255, 255, 0.2);
+                        color: white;
+                        font-size: 20px;
+                        cursor: pointer;
+                        transition: background 0.2s;
+                    `;
+                    closeBtn.addEventListener('mouseenter', () => {
+                        closeBtn.style.background = 'rgba(255, 255, 255, 0.4)';
+                    });
+                    closeBtn.addEventListener('mouseleave', () => {
+                        closeBtn.style.background = 'rgba(255, 255, 255, 0.2)';
+                    });
+                    
+                    const closeOverlay = () => {
+                        overlay.remove();
+                        document.body.style.overflow = '';
+                    };
+                    
+                    overlay.addEventListener('click', (e) => {
+                        if (e.target === overlay) closeOverlay();
+                    });
+                    closeBtn.addEventListener('click', closeOverlay);
+                    document.addEventListener('keydown', function escHandler(e) {
+                        if (e.key === 'Escape') {
+                            closeOverlay();
+                            document.removeEventListener('keydown', escHandler);
+                        }
+                    });
+                    
+                    overlay.appendChild(zoomedImg);
+                    overlay.appendChild(closeBtn);
+                    document.body.appendChild(overlay);
+                    document.body.style.overflow = 'hidden';
+                };
+                
+                zoomBtn.addEventListener('click', openZoomModal);
+                img.addEventListener('click', openZoomModal);
+                
+                // Wrap image
+                img.parentNode.insertBefore(wrapper, img);
+                wrapper.appendChild(img);
+                btnContainer.appendChild(playBtn);
+                btnContainer.appendChild(zoomBtn);
+                wrapper.appendChild(btnContainer);
+                
+                // Show first frame initially (paused state)
+                img.src = firstFrameSrc;
+            };
+            
+            if (img.complete) {
+                applyGifPlayer();
+            } else {
+                img.addEventListener('load', applyGifPlayer, { once: true });
+            }
+        }
+    });
 }
 
 document.addEventListener('DOMContentLoaded', () => {

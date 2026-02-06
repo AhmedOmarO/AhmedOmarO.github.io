@@ -1,5 +1,13 @@
 [
     {
+        "title": "Deep Learning",
+        "date": "2026-02-06",
+        "file": "2026-02-06-DeepLearning.md",
+        "lang": "en"
+    },
+
+
+    {
         "title": "Mixed Models",
         "date": "2026-01-31",
         "file": "2026-01-31-mixedmodels.md",
