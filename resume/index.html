@@ -1,17 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-F4FJWDMJT1"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-F4FJWDMJT1');
-    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
     <title>Resume | Ahmed Omar</title>
     <meta name="description" content="Resume and contact details for Ahmed Omar, data scientist.">
     <link rel="canonical" href="https://ahmedomaro.github.io/resume/">
@@ -24,7 +16,7 @@
     <meta name="twitter:title" content="Resume | Ahmed Omar">
     <meta name="twitter:description" content="Resume and contact details for Ahmed Omar, data scientist.">
     <meta name="twitter:image" content="https://ahmedomaro.github.io/content/moto.jpeg">
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/style.css?v=20260825-5">
 </head>
 <body>
     <header class="site-header">
@@ -33,29 +25,57 @@
             <nav class="site-nav" aria-label="Primary">
                 <a href="/#about">About</a>
                 <a href="/blogs/">Blogs</a>
-                <a href="/resume/">Resume</a>
+                <a href="/resume/" aria-current="page">Resume</a>
             </nav>
         </div>
     </header>
 
-    <main class="wrapper about-page">
-        <h1>Resume</h1>
-        <p>You can download the latest resume as a PDF.</p>
-        <p><a href="/resume.pdf">Download resume PDF</a></p>
-        <p>If you need a different format, email <a href="mailto:ahmedomar92@yahoo.com">ahmedomar92@yahoo.com</a>.</p>
+    <main class="wrapper about-page resume-page">
+        <h1 class="visually-hidden">Resume</h1>
+        <section class="resume-viewer" aria-label="Embedded resume">
+            <iframe
+                src="https://docs.google.com/document/d/1X6mB0I_ImC0XKP1N_8oZz_j_qsq8gs91POe2VdlI4vE/preview"
+                title="Ahmed Omar resume"
+                loading="lazy"
+                referrerpolicy="no-referrer"
+                allowfullscreen
+            ></iframe>
+        </section>
+        <div class="resume-actions">
+            <a class="resume-button" href="https://docs.google.com/document/d/1X6mB0I_ImC0XKP1N_8oZz_j_qsq8gs91POe2VdlI4vE/export?format=pdf" target="_blank" rel="noreferrer">
+                <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3v12"></path>
+                    <path d="m7 10 5 5 5-5"></path>
+                    <path d="M5 21h14"></path>
+                </svg>
+                Download resume
+            </a>
+        </div>
     </main>
 
+    <section class="cookie-banner" data-cookie-banner hidden aria-label="Cookie consent">
+        <div class="wrapper cookie-banner__inner">
+            <div class="cookie-banner__copy">
+                <p>Analytics cookies are optional. The site works normally if you decline.</p>
+            </div>
+            <div class="cookie-banner__actions">
+                <button type="button" class="cookie-btn cookie-btn--secondary" data-cookie-decline>Decline</button>
+                <button type="button" class="cookie-btn cookie-btn--primary" data-cookie-accept>Accept</button>
+            </div>
+        </div>
+    </section>
+
     <footer class="site-footer">
-        <div class="wrapper">
-            <div class="social-links" aria-label="Social links">
+        <div class="wrapper footer-inner">
+            <p>&copy; <span id="year"></span> Ahmed Omar</p>
+            <nav class="footer-links" aria-label="Footer">
                 <a href="https://www.linkedin.com/in/ahmedomaro/" target="_blank" rel="noreferrer">LinkedIn</a>
                 <a href="mailto:ahmedomar92@yahoo.com">Email</a>
-            </div>
-
-            <p>&copy; <span id="year"></span> Ahmed Omar. All rights reserved.</p>
+                <button type="button" class="cookie-settings-link" data-cookie-settings>Cookie settings</button>
+            </nav>
         </div>
     </footer>
 
-    <script src="../js/script.js"></script>
+    <script src="../js/script.js?v=20260825-4"></script>
 </body>
 </html>

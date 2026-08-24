@@ -1,17 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-F4FJWDMJT1"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-F4FJWDMJT1');
-    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
     <title>Ahmed Omar | Data Scientist</title>
     <meta name="description" content="Ahmed Omar is a data scientist focused on turning messy data into clear, scalable decisions. Read the latest blog posts and notes.">
     <link rel="canonical" href="https://ahmedomaro.github.io/">
@@ -24,14 +16,14 @@
     <meta name="twitter:title" content="Ahmed Omar | Data Scientist">
     <meta name="twitter:description" content="Ahmed Omar is a data scientist focused on turning messy data into clear, scalable decisions. Read the latest blog posts and notes.">
     <meta name="twitter:image" content="https://ahmedomaro.github.io/content/moto.jpeg">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=20260825-5">
 </head>
 <body>
     <header class="site-header">
         <div class="wrapper">
             <a class="brand" href="/">Ahmed Omar</a>
             <nav class="site-nav" aria-label="Primary">
-                <a href="/#about">About</a>
+                <a href="/" aria-current="page">About</a>
                 <a href="/blogs/">Blogs</a>
                 <a href="/resume/">Resume</a>
             </nav>
@@ -40,44 +32,37 @@
 
     <main class="wrapper about-page">
         <section id="about" class="about">
-            <div class="intro-links">
-                <!-- <p class="tagline">Software engineer & writer</p> -->
-                <!-- <div class="social-links" aria-label="Social links">
-                        <a href="https://www.linkedin.com/in/ahmedomaro/" target="_blank" rel="noreferrer">LinkedIn</a>
-                    <a href="mailto:ahmedomar92@yahoo.com">Email</a>
-                </div> -->
-            </div>
-
-
-            <div class="about-heading">
-                <span class="rule" aria-hidden="true"></span>
-                <h1>Ahmed Omar</h1>
-            </div>
+            <h1 class="visually-hidden">Ahmed Omar</h1>
 
             <div id="about-body" class="about-body" data-source="/content/about.md">
-                <p><img src="/content/moto.jpeg" alt="moto" loading="lazy"></p>
-                <p><em>“I have not seen among people’s flaws anything as great as the shortcoming of those capable of perfection.”</em> — <strong>Al-Mutanabbi</strong></p>
-
-                <h2>About me</h2>
-                <p>I’m a data scientist who loves <strong>turning messy data into meaningful decisions</strong>. Over the past decade, I’ve built pipelines, models, and stories that help people and products move smarter from early dashboards to machine learning systems that run at scale.</p>
-                <p>I believe <strong>great data work isn’t just about accuracy; it’s about clarity</strong>. I care about making insights <em>approachable</em>, models <em>explainable</em>, and systems <em>scalable</em>. I enjoy that sweet spot where business meets algorithms, where human intuition still guides the math.</p>
-                <p>Currently, I’m pursuing my <strong>Master’s in Applied Data Science</strong> at <em>Utrecht University</em>.</p>
-                <p>If you would like to collaborate or say hello, feel free to <a href="mailto:ahmedomar92@yahoo.com">send a note</a>.</p>
+                <p>Loading…</p>
             </div>
         </section>
     </main>
 
+    <section class="cookie-banner" data-cookie-banner hidden aria-label="Cookie consent">
+        <div class="wrapper cookie-banner__inner">
+            <div class="cookie-banner__copy">
+                <p>Analytics cookies are optional. The site works normally if you decline.</p>
+            </div>
+            <div class="cookie-banner__actions">
+                <button type="button" class="cookie-btn cookie-btn--secondary" data-cookie-decline>Decline</button>
+                <button type="button" class="cookie-btn cookie-btn--primary" data-cookie-accept>Accept</button>
+            </div>
+        </div>
+    </section>
+
     <footer class="site-footer">
-        <div class="wrapper">
-            <div class="social-links" aria-label="Social links">
+        <div class="wrapper footer-inner">
+            <p>&copy; <span id="year"></span> Ahmed Omar</p>
+            <nav class="footer-links" aria-label="Footer">
                 <a href="https://www.linkedin.com/in/ahmedomaro/" target="_blank" rel="noreferrer">LinkedIn</a>
                 <a href="mailto:ahmedomar92@yahoo.com">Email</a>
-            </div>
-
-            <p>&copy; <span id="year"></span> Ahmed Omar. All rights reserved.</p>
+                <button type="button" class="cookie-settings-link" data-cookie-settings>Cookie settings</button>
+            </nav>
         </div>
     </footer>
 
-    <script src="js/script.js"></script>
+    <script src="js/script.js?v=20260825-4"></script>
 </body>
 </html>

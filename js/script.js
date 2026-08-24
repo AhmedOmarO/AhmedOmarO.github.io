@@ -161,29 +161,17 @@ function markdownToHtml(markdown) {
 // Function to detect Arabic content and apply RTL styling
 function detectAndApplyRTL(element) {
     if (!element) return;
-    
-    // Arabic Unicode range: \u0600-\u06FF (Arabic), \u0750-\u077F (Arabic Supplement)
-    const arabicRegex = /[\u0600-\u06FF\u0750-\u077F]/;
+
     const textContent = element.textContent || element.innerText || '';
-    
-    console.log('Checking element for Arabic content:', element.className);
-    console.log('Text sample:', textContent.substring(0, 100));
-    
-    // Count Arabic characters vs total characters
     const arabicMatches = textContent.match(/[\u0600-\u06FF\u0750-\u077F]/g);
     const arabicCharCount = arabicMatches ? arabicMatches.length : 0;
     const totalCharCount = textContent.replace(/\s/g, '').length;
-    
-    console.log('Arabic chars:', arabicCharCount, 'Total chars:', totalCharCount);
-    
-    // If more than 10% of characters are Arabic, apply RTL styling
+
     if (totalCharCount > 0 && (arabicCharCount / totalCharCount) > 0.1) {
-        console.log('Applying RTL styling...');
         element.classList.add('arabic');
         element.setAttribute('lang', 'ar');
         element.setAttribute('dir', 'rtl');
-        
-        // Apply to all child elements as well
+
         const allChildren = element.querySelectorAll('*');
         allChildren.forEach(child => {
             if (child.textContent && /[\u0600-\u06FF\u0750-\u077F]/.test(child.textContent)) {
@@ -191,19 +179,16 @@ function detectAndApplyRTL(element) {
                 child.setAttribute('dir', 'rtl');
             }
         });
-        
-        // Also set direction on the parent blog post if this is within one
+
         const blogPost = element.closest('.blog-post');
         if (blogPost) {
-            console.log('Setting RTL on blog post element');
             blogPost.classList.add('arabic');
             blogPost.setAttribute('lang', 'ar');
             blogPost.setAttribute('dir', 'rtl');
         }
-        
-        // Force immediate style recalculation
+
         element.style.direction = 'rtl';
-        element.style.textAlign = 'justify';
+        element.style.textAlign = 'right';
     }
 }
 
@@ -225,6 +210,24 @@ function normaliseFilePath(file) {
     return file.trim();
 }
 
+function formatPostDate(dateValue) {
+    if (!dateValue) {
+        return '';
+    }
+
+    const date = new Date(`${dateValue}T00:00:00Z`);
+    if (Number.isNaN(date.getTime())) {
+        return dateValue;
+    }
+
+    return new Intl.DateTimeFormat('en', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        timeZone: 'UTC'
+    }).format(date);
+}
+
 async function loadBlogIndex() {
     const listElement = document.getElementById('post-list');
     if (!listElement) {
@@ -233,12 +236,56 @@ async function loadBlogIndex() {
 
     const fallbackHtml = listElement.innerHTML;
     const parentElement = listElement.parentElement;
+    const languageParam = new URLSearchParams(window.location.search).get('lang');
+    const activeLanguage = languageParam === 'ar' ? 'ar' : 'en';
+    const languageToggles = document.querySelectorAll('[data-post-language]');
+
+    languageToggles.forEach((toggle) => {
+        const isActive = toggle.dataset.postLanguage === activeLanguage;
+        if (isActive) {
+            toggle.setAttribute('aria-current', 'page');
+        } else {
+            toggle.removeAttribute('aria-current');
+        }
+
+        if (toggle.dataset.filterBound) {
+            return;
+        }
+
+        toggle.dataset.filterBound = 'true';
+        toggle.addEventListener('click', (event) => {
+            event.preventDefault();
+            const selectedLanguage = toggle.dataset.postLanguage === 'ar' ? 'ar' : 'en';
+            const url = new URL(window.location.href);
+
+            if (selectedLanguage === 'ar') {
+                url.searchParams.set('lang', 'ar');
+            } else {
+                url.searchParams.delete('lang');
+            }
+
+            window.history.replaceState({}, '', url);
+            loadBlogIndex();
+        });
+    });
+
+    if (activeLanguage === 'ar') {
+        listElement.lang = 'ar';
+        listElement.dir = 'rtl';
+    } else {
+        listElement.removeAttribute('lang');
+        listElement.removeAttribute('dir');
+    }
 
     try {
         const posts = await fetchPosts();
-        if (!Array.isArray(posts) || posts.length === 0) {
+        const visiblePosts = Array.isArray(posts)
+            ? posts.filter((post) => activeLanguage === 'ar' ? post.lang === 'ar' : post.lang !== 'ar')
+            : [];
+
+        if (visiblePosts.length === 0) {
             listElement.classList.add('empty');
-            listElement.innerHTML = '<li>No posts yet. Add an entry to <code>blogs/posts.json</code> to publish one.</li>';
+            listElement.innerHTML = `<li>No ${activeLanguage === 'ar' ? 'Arabic' : 'English'} posts yet.</li>`;
             const existingError = parentElement?.querySelector('[data-post-error]');
             if (existingError) {
                 existingError.remove();
@@ -249,25 +296,43 @@ async function loadBlogIndex() {
         const listItems = document.createDocumentFragment();
         let validPosts = 0;
 
-        posts.forEach((post) => {
+        visiblePosts.forEach((post) => {
             const safeFile = normaliseFilePath(post.file);
             if (!safeFile) {
                 return;
             }
 
             const listItem = document.createElement('li');
-            const link = document.createElement('a');
-            link.href = `post.html?file=${encodeURIComponent(safeFile)}`;
-            link.textContent = post.title || safeFile;
-            listItem.appendChild(link);
+            const card = document.createElement('article');
+            card.className = 'post-card';
 
-            if (post.date) {
-                const date = document.createElement('span');
-                date.className = 'post-date';
-                date.textContent = ` — ${post.date}`;
-                listItem.appendChild(date);
+            if (post.lang === 'ar') {
+                card.lang = 'ar';
+                card.dir = 'rtl';
             }
 
+            if (post.date) {
+                const date = document.createElement('time');
+                date.className = 'post-card__meta';
+                date.dateTime = post.date;
+                date.textContent = formatPostDate(post.date);
+                card.appendChild(date);
+            }
+
+            const link = document.createElement('a');
+            link.className = 'post-card__title';
+            link.href = `post.html?file=${encodeURIComponent(safeFile)}`;
+            link.textContent = post.title || safeFile;
+            card.appendChild(link);
+
+            if (post.description) {
+                const description = document.createElement('p');
+                description.className = 'post-card__description';
+                description.textContent = post.description;
+                card.appendChild(description);
+            }
+
+            listItem.appendChild(card);
             listItems.appendChild(listItem);
             validPosts += 1;
         });
@@ -350,12 +415,11 @@ async function loadBlogPost() {
         
         // Check if metadata specifies language as Arabic
         if (metadata && metadata.lang === 'ar') {
-            console.log('Metadata indicates Arabic content');
             articleElement.classList.add('arabic');
             articleElement.setAttribute('lang', 'ar');
             articleElement.setAttribute('dir', 'rtl');
             articleElement.style.direction = 'rtl';
-            articleElement.style.textAlign = 'justify';
+            articleElement.style.textAlign = 'right';
         }
         
         // Auto-detect Arabic content and apply RTL styling
@@ -607,12 +671,103 @@ function setupGifHover(container) {
     });
 }
 
+const COOKIE_CHOICE_KEY = 'ahmedomar_cookie_choice';
+const ANALYTICS_ID = 'G-F4FJWDMJT1';
+
+function getCookieChoice() {
+    return window.localStorage.getItem(COOKIE_CHOICE_KEY);
+}
+
+function setCookieChoice(choice) {
+    window.localStorage.setItem(COOKIE_CHOICE_KEY, choice);
+}
+
+function hideCookieBanner() {
+    const banner = document.querySelector('[data-cookie-banner]');
+    if (banner) {
+        banner.hidden = true;
+    }
+}
+
+function showCookieBanner() {
+    const banner = document.querySelector('[data-cookie-banner]');
+    if (banner) {
+        banner.hidden = false;
+    }
+}
+
+function loadAnalytics() {
+    if (window.__analyticsLoaded) {
+        return;
+    }
+
+    window.__analyticsLoaded = true;
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = window.gtag || function gtag() {
+        window.dataLayer.push(arguments);
+    };
+
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${ANALYTICS_ID}`;
+    document.head.appendChild(script);
+
+    window.gtag('js', new Date());
+    window.gtag('config', ANALYTICS_ID);
+}
+
+function handleCookieChoice(choice) {
+    setCookieChoice(choice);
+    hideCookieBanner();
+
+    if (choice === 'accepted') {
+        loadAnalytics();
+    }
+}
+
+function setupCookieConsent() {
+    const banner = document.querySelector('[data-cookie-banner]');
+    if (!banner) {
+        return;
+    }
+
+    const acceptButton = banner.querySelector('[data-cookie-accept]');
+    const declineButton = banner.querySelector('[data-cookie-decline]');
+    const settingsButtons = document.querySelectorAll('[data-cookie-settings]');
+    const savedChoice = getCookieChoice();
+
+    if (savedChoice === 'accepted') {
+        loadAnalytics();
+        hideCookieBanner();
+    } else if (savedChoice === 'declined') {
+        hideCookieBanner();
+    } else {
+        showCookieBanner();
+    }
+
+    if (acceptButton) {
+        acceptButton.addEventListener('click', () => handleCookieChoice('accepted'));
+    }
+
+    if (declineButton) {
+        declineButton.addEventListener('click', () => handleCookieChoice('declined'));
+    }
+
+    settingsButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+            window.localStorage.removeItem(COOKIE_CHOICE_KEY);
+            showCookieBanner();
+        });
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const yearElement = document.getElementById('year');
     if (yearElement) {
         yearElement.textContent = new Date().getFullYear();
     }
 
+    setupCookieConsent();
     loadBlogIndex();
     loadBlogPost();
     loadAboutSection();

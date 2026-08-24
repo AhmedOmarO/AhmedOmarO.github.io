@@ -1,17 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-F4FJWDMJT1"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-F4FJWDMJT1');
-    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
     <title>Blog | Ahmed Omar</title>
     <meta name="description" content="Blog posts by Ahmed Omar on data science, statistics, and practical analysis notes.">
     <link rel="canonical" href="https://ahmedomaro.github.io/blogs/">
@@ -24,8 +16,8 @@
     <meta name="twitter:title" content="Blog | Ahmed Omar">
     <meta name="twitter:description" content="Blog posts by Ahmed Omar on data science, statistics, and practical analysis notes.">
     <meta name="twitter:image" content="https://ahmedomaro.github.io/content/moto.jpeg">
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/blog.css">
+    <link rel="stylesheet" href="../css/style.css?v=20260825-5">
+    <link rel="stylesheet" href="../css/blog.css?v=20260825-3">
 </head>
 <body>
     <header class="site-header">
@@ -33,42 +25,71 @@
             <a class="brand" href="/">Ahmed Omar</a>
             <nav class="site-nav" aria-label="Primary">
                 <a href="/#about">About</a>
-                <a href="/blogs/">Blogs</a>
+                <a href="/blogs/" aria-current="page">Blogs</a>
                 <a href="/resume/">Resume</a>
             </nav>
         </div>
     </header>
 
     <main class="wrapper blog-index">
-        <h1>Blog</h1>
-        <p class="intro">A running list of posts. Pick a link to open the full piece.</p>
+        <header class="blog-index__header">
+            <div class="blog-index__top">
+                <p class="blog-index__eyebrow">Writing</p>
+                <nav class="language-toggle" aria-label="Writing language">
+                    <a href="./" data-post-language="en" aria-current="page">English</a>
+                    <a href="./?lang=ar" data-post-language="ar" lang="ar">العربية</a>
+                </nav>
+            </div>
+            <h1 class="visually-hidden">Blog</h1>
+        </header>
         <ul id="post-list" class="post-list" aria-live="polite">
             <li>
-                <a href="post.html?file=2026-01-07-DS.md">Great Data Science Articles</a>
-                <span class="post-date"> — 2026-01-07</span>
+                <article class="post-card">
+                    <time class="post-card__meta" datetime="2026-02-06">February 6, 2026</time>
+                    <a class="post-card__title" href="post.html?file=2026-02-06-DeepLearning.md">Deep Learning</a>
+                    <p class="post-card__description">How neural networks learn.</p>
+                </article>
             </li>
             <li>
-                <a href="post.html?file=2025-12-29-classification.md">الجمع والمنع في الاختبارات الاحصائية</a>
-                <span class="post-date"> — 2025-12-29</span>
+                <article class="post-card">
+                    <time class="post-card__meta" datetime="2026-01-31">January 31, 2026</time>
+                    <a class="post-card__title" href="post.html?file=2026-01-31-mixedmodels.md">Mixed Models</a>
+                    <p class="post-card__description">Modeling grouped data.</p>
+                </article>
             </li>
             <li>
-                <a href="post.html?file=2024-05-27-pypi-eda.md">Python Packages installations</a>
-                <span class="post-date"> — 2024-05-27</span>
+                <article class="post-card">
+                    <time class="post-card__meta" datetime="2026-01-07">January 7, 2026</time>
+                    <a class="post-card__title" href="post.html?file=2026-01-07-DS.md">Great Data Science Articles</a>
+                    <p class="post-card__description">Useful data science reading.</p>
+                </article>
             </li>
         </ul>
     </main>
 
+    <section class="cookie-banner" data-cookie-banner hidden aria-label="Cookie consent">
+        <div class="wrapper cookie-banner__inner">
+            <div class="cookie-banner__copy">
+                <p>Analytics cookies are optional. The site works normally if you decline.</p>
+            </div>
+            <div class="cookie-banner__actions">
+                <button type="button" class="cookie-btn cookie-btn--secondary" data-cookie-decline>Decline</button>
+                <button type="button" class="cookie-btn cookie-btn--primary" data-cookie-accept>Accept</button>
+            </div>
+        </div>
+    </section>
+
     <footer class="site-footer">
-        <div class="wrapper">
-            <div class="social-links" aria-label="Social links">
+        <div class="wrapper footer-inner">
+            <p>&copy; <span id="year"></span> Ahmed Omar</p>
+            <nav class="footer-links" aria-label="Footer">
                 <a href="https://www.linkedin.com/in/ahmedomaro/" target="_blank" rel="noreferrer">LinkedIn</a>
                 <a href="mailto:ahmedomar92@yahoo.com">Email</a>
-            </div>
-
-            <p>&copy; <span id="year"></span> Ahmed Omar. All rights reserved.</p>
+                <button type="button" class="cookie-settings-link" data-cookie-settings>Cookie settings</button>
+            </nav>
         </div>
     </footer>
 
-    <script src="../js/script.js"></script>
+    <script src="../js/script.js?v=20260825-4"></script>
 </body>
 </html>

@@ -3,6 +3,7 @@
         "title": "Deep Learning",
         "date": "2026-02-06",
         "file": "2026-02-06-DeepLearning.md",
+        "description": "How neural networks learn.",
         "lang": "en"
     },
 
@@ -11,6 +12,7 @@
         "title": "Mixed Models",
         "date": "2026-01-31",
         "file": "2026-01-31-mixedmodels.md",
+        "description": "Modeling grouped data.",
         "lang": "en"
     },
 
@@ -18,18 +20,21 @@
         "title": "Great Data Science Articles",
         "date": "2026-01-07",
         "file": "2026-01-07-DS.md",
+        "description": "Useful data science reading.",
         "lang": "en"
     },
     {
         "title": "الجمع والمنع في الاختبارات الاحصائية",
         "date": "2025-12-29",
         "file": "2025-12-29-classification.md",
+        "description": "مقارنة بين الحساسية والنوعية.",
         "lang": "ar"
     },
     {
         "title": "Python Packages installations",
         "date": "2024-05-27",
-        "file": "2024-05-27-pypi-eda.md"
+        "file": "2024-05-27-pypi-eda.md",
+        "description": "How PyPI downloads concentrate."
     }
 
 
@@ -37,4 +42,3 @@
   
 
 ]
-
