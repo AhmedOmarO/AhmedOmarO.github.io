@@ -397,6 +397,42 @@ async function loadBlogPost() {
         const text = await fileResponse.text();
         const metadata = Array.isArray(posts) ? posts.find((post) => normaliseFilePath(post.file) === safeFile) : null;
 
+        const canonicalUrl = new URL('post.html', window.location.href);
+        canonicalUrl.searchParams.set('file', safeFile);
+        const canonicalHref = canonicalUrl.toString();
+        const title = metadata && metadata.title ? metadata.title : safeFile;
+        const description = metadata && metadata.description ? metadata.description : 'A data science article by Ahmed Omar.';
+        document.title = `${title} | Ahmed Omar`;
+        const descriptionMeta = document.getElementById('post-description');
+        const canonicalLink = document.getElementById('post-canonical');
+        const ogTitle = document.getElementById('post-og-title');
+        const ogDescription = document.getElementById('post-og-description');
+        const ogUrl = document.getElementById('post-og-url');
+        if (descriptionMeta) descriptionMeta.setAttribute('content', description);
+        if (canonicalLink) canonicalLink.setAttribute('href', canonicalHref);
+        if (ogTitle) ogTitle.setAttribute('content', `${title} | Ahmed Omar`);
+        if (ogDescription) ogDescription.setAttribute('content', description);
+        if (ogUrl) ogUrl.setAttribute('content', canonicalHref);
+        const schemaElement = document.getElementById('post-jsonld');
+        if (schemaElement) {
+            schemaElement.textContent = JSON.stringify({
+                '@context': 'https://schema.org',
+                '@type': 'BlogPosting',
+                headline: title,
+                description,
+                datePublished: metadata && metadata.date ? metadata.date : undefined,
+                inLanguage: metadata && metadata.lang ? metadata.lang : 'en',
+                author: {
+                    '@type': 'Person',
+                    '@id': 'https://ahmedomaro.github.io/#person',
+                    name: 'Ahmed Omar',
+                    url: 'https://ahmedomaro.github.io/'
+                },
+                mainEntityOfPage: canonicalHref,
+                url: canonicalHref
+            });
+        }
+
         let articleHtml = '';
         if (metadata) {
             articleHtml += `<h1>${escapeHtml(metadata.title || safeFile)}</h1>`;
