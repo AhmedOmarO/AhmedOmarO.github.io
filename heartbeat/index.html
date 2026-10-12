@@ -30,7 +30,7 @@
 .project-actions .primary{background:#171714;color:white}
 .project-actions .secondary{background:white;color:#171714}
 .demo{border:1px solid rgba(23,23,20,.16);border-radius:12px;overflow:hidden;background:#101b27;box-shadow:0 16px 40px rgba(0,0,0,.1)}
-.demo img{margin:0;border-radius:0;width:100%;height:auto}
+.demo img,.demo video{display:block;margin:0;border-radius:0;width:100%;height:auto;aspect-ratio:16/9;object-fit:contain}
 .demo figcaption{font:400 .77rem 'DM Sans',sans-serif;color:#c2d2dc;padding:.7rem 1rem}
 code{background:#ece9e1;padding:.2rem .4rem;border-radius:4px;font-size:.88em}
 .features{padding-left:1.4rem}
@@ -48,8 +48,9 @@ code{background:#ece9e1;padding:.2rem .4rem;border-radius:4px;font-size:.88em}
 <p class="lede">Visualize what your AI coding agents are doing. A local dashboard that turns Codex and Claude Code session activity into signals you can follow.</p>
 <div class="project-actions"><a class="primary" href="https://github.com/AhmedOmarO/heartbeat-monitor" target="_blank" rel="noopener noreferrer">View on GitHub ↗</a><a class="secondary" href="https://github.com/AhmedOmarO/heartbeat-monitor#install" target="_blank" rel="noopener noreferrer">Installation instructions ↗</a></div>
 <figure class="demo">
-<img src="https://raw.githubusercontent.com/AhmedOmarO/heartbeat-monitor/main/screenshots/fanout-live-fixture-1m-1280x720.png" alt="Heartbeat live agent signal graph showing multiple coding agents and their thinking, tool and output events" width="1280" height="720">
-<figcaption>Live agent signals — thinking, tool calls, output and completion.</figcaption>
+<video autoplay muted loop playsinline preload="metadata" poster="https://raw.githubusercontent.com/AhmedOmarO/heartbeat-monitor/main/screenshots/fanout-live-fixture-1m-1280x720.png" aria-label="Heartbeat demo showing agent activity over time" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><source src="/heartbeat/heartbeat-demo.mp4" type="video/mp4"></video>
+<img hidden src="https://raw.githubusercontent.com/AhmedOmarO/heartbeat-monitor/main/screenshots/fanout-live-fixture-1m-1280x720.png" alt="Heartbeat agent activity dashboard with concurrent coding agents" width="1280" height="720">
+<figcaption>Heartbeat dashboard demo — agent signals, events and token usage.</figcaption>
 </figure>
 <h2>Why I built it</h2>
 <p>Coming from data science, I wanted a dashboard for understanding what happens when AI agents work. An agent can reason, call tools, produce output, or hand work to subagents — and it can be difficult to see what's going on. I took inspiration from an ECG: give each agent its own heartbeat.</p>
