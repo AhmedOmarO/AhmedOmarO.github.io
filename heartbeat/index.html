@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<title>Heartbeat — Codex & Claude Code Agent Activity Monitor | Ahmed Omar</title>
+<meta name="description" content="Heartbeat is a free, open-source local dashboard for visualizing Codex and Claude Code agent sessions, thinking, tool calls, output, and token usage in real time.">
+<meta name="keywords" content="Heartbeat, Codex monitor, Claude Code monitor, AI agent observability, agent activity dashboard, coding agents, token usage, agent visualization, open source">
+<link rel="canonical" href="https://ahmedomaro.github.io/heartbeat/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Ahmed Omar">
+<meta property="og:title" content="Heartbeat — Visualize Codex & Claude Code Sessions">
+<meta property="og:description" content="An open-source local dashboard that gives coding agents their own heartbeat. Follow thinking, tool calls, output and token usage.">
+<meta property="og:url" content="https://ahmedomaro.github.io/heartbeat/">
+<meta property="og:image" content="https://raw.githubusercontent.com/AhmedOmarO/heartbeat-monitor/main/screenshots/fanout-live-fixture-1m-1280x720.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Heartbeat — AI Coding Agent Monitor">
+<meta name="twitter:description" content="Visualize local Codex and Claude Code sessions with a live agent signal and token usage dashboard.">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/AhmedOmarO/heartbeat-monitor/main/screenshots/fanout-live-fixture-1m-1280x720.png">
+<link rel="stylesheet" href="/css/style.css">
+<style>
+.project-page {max-width:860px;padding-top:3.3rem}
+.project-page .eyebrow{font:600 .78rem 'DM Sans',sans-serif;letter-spacing:.12em;color:#075fc8;text-transform:uppercase}
+.project-page h1{font-size:clamp(2.7rem,7vw,4.6rem);line-height:1.06;letter-spacing:-.055em;margin:.4rem 0 1rem}
+.project-page .lede{font-size:1.35rem;line-height:1.48;color:#625f57;max-width:730px}
+.project-page h2{font-size:1.9rem;line-height:1.18;margin-top:2.5rem}
+.project-page p,.project-page li{color:#625f57}
+.project-actions{display:flex;gap:.75rem;flex-wrap:wrap;margin:1.65rem 0 2rem;font-family:'DM Sans',sans-serif;font-size:.9rem}
+.project-actions a{padding:.65rem 1.15rem;border:1px solid #171714;border-radius:7px;text-decoration:none;font-weight:600}
+.project-actions .primary{background:#171714;color:white}
+.project-actions .secondary{background:white;color:#171714}
+.demo{border:1px solid rgba(23,23,20,.16);border-radius:12px;overflow:hidden;background:#101b27;box-shadow:0 16px 40px rgba(0,0,0,.1)}
+.demo img{margin:0;border-radius:0;width:100%;height:auto}
+.demo figcaption{font:400 .77rem 'DM Sans',sans-serif;color:#c2d2dc;padding:.7rem 1rem}
+code{background:#ece9e1;padding:.2rem .4rem;border-radius:4px;font-size:.88em}
+.features{padding-left:1.4rem}
+@media(max-width:600px){.site-header .wrapper{flex-wrap:wrap}.site-nav{flex-wrap:wrap}.project-page{padding-top:2rem}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Heartbeat","applicationCategory":"DeveloperApplication","operatingSystem":"Windows, macOS, Linux","description":"Local Codex and Claude Code session monitoring dashboard for AI coding agent activity and token usage.","url":"https://ahmedomaro.github.io/heartbeat/","codeRepository":"https://github.com/AhmedOmarO/heartbeat-monitor","author":{"@type":"Person","name":"Ahmed Omar"},"isAccessibleForFree":true,"softwareRequirements":"Python 3.10+"}
+</script>
+</head>
+<body>
+<header class="site-header"><div class="wrapper"><a class="brand" href="/">Ahmed Omar</a><nav class="site-nav" aria-label="Primary"><a href="/">About</a><a href="/blogs/">Blogs</a><a href="/heartbeat/" aria-current="page">Heartbeat</a><a href="/resume/">Resume</a><a href="/-amsterdam-ai-events/">AI Events</a></nav></div></header>
+<main class="wrapper project-page">
+<p class="eyebrow">Open-source developer tool</p>
+<h1>Heartbeat</h1>
+<p class="lede">Visualize what your AI coding agents are doing. A local dashboard that turns Codex and Claude Code session activity into signals you can follow.</p>
+<div class="project-actions"><a class="primary" href="https://github.com/AhmedOmarO/heartbeat-monitor" target="_blank" rel="noopener noreferrer">View on GitHub ↗</a><a class="secondary" href="https://github.com/AhmedOmarO/heartbeat-monitor#install" target="_blank" rel="noopener noreferrer">Installation instructions ↗</a></div>
+<figure class="demo">
+<img src="https://raw.githubusercontent.com/AhmedOmarO/heartbeat-monitor/main/screenshots/fanout-live-fixture-1m-1280x720.png" alt="Heartbeat live agent signal graph showing multiple coding agents and their thinking, tool and output events" width="1280" height="720">
+<figcaption>Live agent signals — thinking, tool calls, output and completion.</figcaption>
+</figure>
+<h2>Why I built it</h2>
+<p>Coming from data science, I wanted a dashboard for understanding what happens when AI agents work. An agent can reason, call tools, produce output, or hand work to subagents — and it can be difficult to see what's going on. I took inspiration from an ECG: give each agent its own heartbeat.</p>
+<h2>How it works</h2>
+<p>Heartbeat reads session logs already stored locally by <strong>OpenAI Codex</strong> and <strong>Claude Code</strong>. It presents agent activity over time, recent events, and cumulative token usage. No changes to your coding agents are required, and session data stays on your machine.</p>
+<ul class="features"><li>See the signal of each agent and its subagents.</li><li>Follow thinking, tool calls, assistant output, completion and waiting states.</li><li>Browse recent events and token usage over time.</li><li>Switch between sessions and time windows.</li></ul>
+<h2>Try it</h2>
+<p>Install with Python 3.10+ and <code>pipx install 'git+https://github.com/AhmedOmarO/heartbeat-monitor.git'</code>, then run <code>heartbeat</code>.</p>
+<p><a href="https://github.com/AhmedOmarO/heartbeat-monitor" target="_blank" rel="noopener noreferrer">Source code, demo screenshots and setup →</a></p>
+</main>
+<footer class="site-footer"><div class="wrapper footer-inner"><p>© Ahmed Omar</p><nav class="footer-links" aria-label="Footer"><a href="https://www.linkedin.com/in/ahmedomaro/">LinkedIn</a><a href="mailto:ahmedomar92@yahoo.com">Email</a></nav></div></footer>
+<script src="/js/script.js"></script>
+</body></html>
